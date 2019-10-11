@@ -8,12 +8,12 @@
     <PackageProjectUrl>https://github.com/Kelvysb/RecursiveRenamer</PackageProjectUrl>
     <Authors>Kelvys B. Pantaleão</Authors>
     <Description>Command line tool to recursively rename files based on regex pattern search and replace.</Description>
-    <ReleaseNotes>Better error message display</ReleaseNotes>
+    <ReleaseNotes>Better single opperation error handling</ReleaseNotes>
     <Copyright>Kelvys B. 2019</Copyright>
     <PackageTags>Recursive Rename Tool RegEx Pattern</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <Version>1.0.4</Version>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

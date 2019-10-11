@@ -4,6 +4,7 @@ using RecursiveRenamer.Models;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System;
 
 namespace RecursiveRenamer.Business
 {
@@ -74,7 +75,14 @@ namespace RecursiveRenamer.Business
                             }
                             if (!simulate)
                             {
-                                File.Move(file, Path.Combine(Path.GetDirectoryName(file), targetName));
+                                try
+                                {
+                                    File.Move(file, Path.Combine(Path.GetDirectoryName(file), targetName));                                    
+                                }
+                                catch (Exception e)
+                                {                                    
+                                    result.Add($"Error: {e.Message} on {sourceName} => {targetName}");
+                                }
                             }
                             if (!complete)
                                 result.Add($"{reportPrefix}: {sourceName} => {targetName}");
