@@ -6,7 +6,11 @@ Install:
 ```
 dotnet tool install RecursiveRenamer
 ```
-
+  * Requires .Net core 2.2 : https://dotnet.microsoft.com/download/dotnet-core/2.2
+  * It may be nescessary to add the 'dotnet tools' folder to the path environment variable in windows.
+  * in windows the dotnet tools folder it's '%USERPROFILE%\.dotnet\tools'
+  
+  
 Usage:
 
 ```
