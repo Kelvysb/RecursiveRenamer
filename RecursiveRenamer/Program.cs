@@ -66,7 +66,7 @@ namespace RecursiveRenamer
                                 }
                                 else
                                 {
-                                    throw new InvalidOperationException("Must inform the replace patern, on --exec");
+                                    inputArgs.Add("REPLACE_PATERN", "");
                                 }
 
                             }
@@ -355,7 +355,7 @@ namespace RecursiveRenamer
         private static void help()
         {
             Console.WriteLine("Execute:");
-            Console.WriteLine(" --exec or -e <find pattern> <Replace string>");            
+            Console.WriteLine(" --exec or -e <find pattern> [Replace string*]");
             Console.WriteLine("     --path (optional defines the search path)");
             Console.WriteLine("     --dir-filter <RegEx filter> (optional filter the directories to be searched)");
             Console.WriteLine("     --file-filter <RegEx filter> (optional filter the files to be renamed)");
@@ -366,9 +366,10 @@ namespace RecursiveRenamer
             Console.WriteLine("         <B> (Replace on the begining of the file name)");
             Console.WriteLine("         <E> (Replace on the end of the file name, consider the extension)");
             Console.WriteLine("         <e> (Replace on the end of the file name, not consider the extension)");
-            Console.WriteLine("     <Replace string> special tags: ");
+            Console.WriteLine("     [Replace string] special tags: ");
             Console.WriteLine("         <S> (Numeric sequence begining from 1, for each folder.)");
             Console.WriteLine("         <s> (Numeric sequence begining from 0, for each folder.)");
+            Console.WriteLine("     *(if omitted will consider empty string)");            
             Console.WriteLine("");
 
             Console.WriteLine("Run saved pattern:");
@@ -377,17 +378,17 @@ namespace RecursiveRenamer
             Console.WriteLine("");
 
             Console.WriteLine("List saved patterns:");
-            Console.WriteLine(" --list or -l");
+            Console.WriteLine("     --list or -l");
             Console.WriteLine("");
             
-            Console.WriteLine(" Get current dir:");
+            Console.WriteLine("Get current dir:");
             Console.WriteLine("     -env or --env");
             Console.WriteLine("");
 
-            Console.WriteLine(" Program Version:");
+            Console.WriteLine("Program Version:");
             Console.WriteLine("     -v or --version");
 
-            Console.WriteLine(" Help:");
+            Console.WriteLine("Help:");
             Console.WriteLine("     -h or --help");
         }
 
