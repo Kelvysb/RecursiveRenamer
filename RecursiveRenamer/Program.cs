@@ -35,22 +35,25 @@ namespace RecursiveRenamer
                     {
                         if (arg.StartsWith("-"))
                         {
-                            if (arg.Equals("--run", StringComparison.InvariantCultureIgnoreCase))
+                            if (arg.Equals("--run", StringComparison.InvariantCultureIgnoreCase) 
+                                || arg.Equals("-r", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 if (argsList.Count > argsList.IndexOf(arg) + 1 && !argsList[argsList.IndexOf(arg) + 1].StartsWith("-"))
                                 {
-                                    inputArgs.Add("RUN", argsList[argsList.IndexOf(arg) + 1]);
+                                    inputArgs.Add("RUN", FormatInputStrings(argsList[argsList.IndexOf(arg) + 1]));
                                 }
                                 else
                                 {
                                     throw new InvalidOperationException("Must saved patern, on --run");
                                 }
                             }
-                            else if (arg.Equals("--exec", StringComparison.InvariantCultureIgnoreCase))
+                            else if (arg.Equals("--exec", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-e", StringComparison.InvariantCultureIgnoreCase))
                             {
+                                inputArgs.Add("EXEC", "");                                
                                 if (argsList.Count > argsList.IndexOf(arg) + 1 && !argsList[argsList.IndexOf(arg) + 1].StartsWith("-"))
                                 {
-                                    inputArgs.Add("FIND_PATERN", argsList[argsList.IndexOf(arg) + 1]);
+                                    inputArgs.Add("FIND_PATERN", FormatInputStrings(argsList[argsList.IndexOf(arg) + 1]));
                                 }
                                 else
                                 {
@@ -59,7 +62,7 @@ namespace RecursiveRenamer
 
                                 if (argsList.Count > argsList.IndexOf(arg) + 2 && !argsList[argsList.IndexOf(arg) + 2].StartsWith("-"))
                                 {
-                                    inputArgs.Add("REPLACE_PATERN", argsList[argsList.IndexOf(arg) + 2]);
+                                    inputArgs.Add("REPLACE_PATERN", FormatInputStrings(argsList[argsList.IndexOf(arg) + 2]));
                                 }
                                 else
                                 {
@@ -67,48 +70,53 @@ namespace RecursiveRenamer
                                 }
 
                             }
-                            else if (arg.Equals("--path", StringComparison.InvariantCultureIgnoreCase))
+                            else if (arg.Equals("--path", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-p", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 if (argsList.Count > argsList.IndexOf(arg) + 1 && !argsList[argsList.IndexOf(arg) + 1].StartsWith("-"))
                                 {
-                                    inputArgs.Add("PATH", argsList[argsList.IndexOf(arg) + 1]);
+                                    inputArgs.Add("PATH", FormatInputStrings(argsList[argsList.IndexOf(arg) + 1]));
                                 }
                                 else
                                 {
                                     throw new InvalidOperationException("Must inform a path, on --path");
                                 }
                             }
-                            else if (arg.Equals("--list", StringComparison.InvariantCultureIgnoreCase))
+                            else if (arg.Equals("--list", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-l", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 inputArgs.Add("LIST", "");
                             }
-                            else if (arg.Equals("--save", StringComparison.InvariantCultureIgnoreCase))
+                            else if (arg.Equals("--save", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-s", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 if (argsList.Count > argsList.IndexOf(arg) + 1 && !argsList[argsList.IndexOf(arg) + 1].StartsWith("-"))
                                 {
-                                    inputArgs.Add("SAVE", argsList[argsList.IndexOf(arg) + 1]);
+                                    inputArgs.Add("SAVE", FormatInputStrings(argsList[argsList.IndexOf(arg) + 1]));
                                 }
                                 else
                                 {
                                     throw new InvalidOperationException("Must inform the name, on --save");
                                 }
                             }
-                            else if (arg.Equals("--dir-filter", StringComparison.InvariantCultureIgnoreCase))
+                            else if (arg.Equals("--dir-filter", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-df", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 if (argsList.Count > argsList.IndexOf(arg) + 1 && !argsList[argsList.IndexOf(arg) + 1].StartsWith("-"))
                                 {
-                                    inputArgs.Add("DIR_FILTER", argsList[argsList.IndexOf(arg) + 1]);
+                                    inputArgs.Add("DIR_FILTER", FormatInputStrings(argsList[argsList.IndexOf(arg) + 1]));
                                 }
                                 else
                                 {
                                     throw new InvalidOperationException("Must inform the filter, on --dir-filter");
                                 }
                             }
-                            else if (arg.Equals("--file-filter", StringComparison.InvariantCultureIgnoreCase))
+                            else if (arg.Equals("--file-filter", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-ff", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 if (argsList.Count > argsList.IndexOf(arg) + 1 && !argsList[argsList.IndexOf(arg) + 1].StartsWith("-"))
                                 {
-                                    inputArgs.Add("FILE_FILTER", argsList[argsList.IndexOf(arg) + 1]);
+                                    inputArgs.Add("FILE_FILTER", FormatInputStrings(argsList[argsList.IndexOf(arg) + 1]));
                                 }
                                 else
                                 {
@@ -195,7 +203,6 @@ namespace RecursiveRenamer
 
                     if (!exit)
                     {
-
                         input = Console.In.ReadLine().Split(" ");
                     }
 
@@ -216,16 +223,16 @@ namespace RecursiveRenamer
             try
             {
 
-                if (!inputArgs.ContainsKey("RUNPATH"))
+                if (!inputArgs.ContainsKey("PATH"))
                 {
-                    inputArgs.Add("RUNPATH", renameBusiness.CurrentDir);
+                    inputArgs.Add("PATH", renameBusiness.CurrentDir);
                 }
 
                 renamePatern = BuiltPatern(inputArgs);
 
                 if (string.IsNullOrEmpty(renamePatern.Name))
                 {
-                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("RUNPATH"));
+                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("PATH"));
                 }
                 else
                 {
@@ -272,6 +279,15 @@ namespace RecursiveRenamer
 
         }
 
+        private static string FormatInputStrings(string input)
+        {
+            if(input.StartsWith("\""))
+                input = input.Remove(0, 1);
+            if(input.EndsWith("\""))
+                input = input.Remove(input.Length - 1, 1);
+            return input;
+        }
+
         private static void Run(Dictionary<string, string> inputArgs)
         {
             List<string> result;
@@ -280,16 +296,16 @@ namespace RecursiveRenamer
             try
             {
 
-                if (!inputArgs.ContainsKey("RUNPATH"))
+                if (!inputArgs.ContainsKey("PATH"))
                 {
-                    inputArgs.Add("RUNPATH", renameBusiness.CurrentDir);
+                    inputArgs.Add("PATH", renameBusiness.CurrentDir);
                 }
 
                 renamePatern = renameBusiness.Open(inputArgs.GetValueOrDefault("RUN"));
 
                 if (renamePatern != null)
                 {
-                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("RUNPATH"));
+                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("PATH"));
                     foreach (string item in result)
                     {
                         Console.WriteLine(item);
@@ -326,34 +342,30 @@ namespace RecursiveRenamer
         }
         private static void help()
         {
-            Console.WriteLine("Run:");
-            Console.WriteLine(" --run <mapper file name> [optional directory path]");
-            Console.WriteLine("     --replace (optional replace existing files)");
+            Console.WriteLine("Execute:");
+            Console.WriteLine(" --exec or -e <find pattern> <Replace string>");            
+            Console.WriteLine("     --path (optional defines the search path)");
+            Console.WriteLine("     --dir-filter <RegEx filter> (optional filter the directories to be searched)");
+            Console.WriteLine("     --file-filter <RegEx filter> (optional filter the files to be renamed)");
+            Console.WriteLine("     --save <pattern name> (optional saves pattern without running)");             
+            Console.WriteLine("     <find pattern> special tags: ");
+            Console.WriteLine("         <B> (Replace on the begining of the file name)");
+            Console.WriteLine("         <E> (Replace on the end of the file name, consider the extension)");
+            Console.WriteLine("         <e> (Replace on the end of the file name, not consider the extension)");
+            Console.WriteLine("     <Replace string> special tags: ");
+            Console.WriteLine("         <S> (Numeric sequence begining from 1, for each folder.)");
+            Console.WriteLine("         <s> (Numeric sequence begining from 0, for each folder.)");
             Console.WriteLine("");
 
-            Console.WriteLine("Run Sequence:");
-            Console.WriteLine(" --run-seq <sequence file name> [optional directory path]");
-            Console.WriteLine("     --replace (optional replace existing files)");
+            Console.WriteLine("Run saved pattern:");
+            Console.WriteLine(" --run or -r <pattern name>");
+            Console.WriteLine("     --path (optional defines the search path)");
             Console.WriteLine("");
 
-            Console.WriteLine("Initialize mapper:");
-            Console.WriteLine(" --init <mapper file name>");
-            Console.WriteLine("     --interactive (optional inform values)");
+            Console.WriteLine("List saved patterns:");
+            Console.WriteLine(" --list or -l");
             Console.WriteLine("");
-
-            Console.WriteLine("Initialize sequence:");
-            Console.WriteLine(" --init-seq <sequence file name> ");
-            Console.WriteLine("     --seq [Mappers List (Space separated)]");
-            Console.WriteLine("");
-
-            Console.WriteLine("Open Mapper Files:");
-            Console.WriteLine(" --open [Mapper name optional]");
-            Console.WriteLine("");
-
-            Console.WriteLine("Open Sequence Files:");
-            Console.WriteLine(" --open-seq [Sequence name optional]");
-            Console.WriteLine("");
-
+            
             Console.WriteLine(" Get current dir:");
             Console.WriteLine("     -env or --env");
             Console.WriteLine("");
