@@ -15,7 +15,7 @@ Usage:
 
 ```
 Execute:
- --exec or -e <find pattern> <Replace string>
+ --exec or -e <find pattern> [Replace string*]
      --path (optional defines the search path)
      --dir-filter <RegEx filter> (optional filter the directories to be searched)
      --file-filter <RegEx filter> (optional filter the files to be renamed)
@@ -29,6 +29,7 @@ Execute:
      <Replace string> special tags:
          <S> (Numeric sequence begining from 1, for each folder.)
          <s> (Numeric sequence begining from 0, for each folder.)
+    *(if omitted will consider empty string)
 
 Run saved pattern:
  --run or -r <pattern name>
@@ -37,13 +38,13 @@ Run saved pattern:
 List saved patterns:
  --list or -l
 
- Get current dir:
-     -env or --env
+Get current dir:
+ -env or --env
 
- Program Version:
-     -v or --version
- Help:
-     -h or --help
+Program Version:
+ -v or --version
+Help:
+ -h or --help
 ```
 
 Examples:
