@@ -18,60 +18,77 @@ namespace RecursiveRenamer.Business
             CurrentDir = currentDir;
         }
 
-        public List<string> Execute(RenamePatern pattern, string path)
+        public List<string> Execute(RenamePatern pattern, string path, bool simulate, bool complete)
         {
             List<string> result = new List<string>();
-            string[] folders = Directory.GetDirectories(Path.GetFullPath(path));
-            string[] files = Directory.GetFiles(Path.GetFullPath(path));
             string sourceName;
             string targetName;
             int index = 1;
+            string reportPrefix = simulate ? "Simulated" : "Renamed";
 
-            foreach (string directory in folders)
+            if (Directory.Exists(Path.GetFullPath(path)))
             {
-                result.AddRange(Execute(pattern, directory));
-            }
 
-            if(string.IsNullOrEmpty(pattern.FolderFilter) || Regex.IsMatch(Path.GetDirectoryName(path), pattern.FolderFilter))
-            {
-                foreach (string file in files)
-                {             
-                    sourceName = Path.GetFileName(file);
-                    if(string.IsNullOrEmpty(pattern.FileFilter) || Regex.IsMatch(sourceName, pattern.FileFilter))
+                string[] folders = Directory.GetDirectories(Path.GetFullPath(path));
+                string[] files = Directory.GetFiles(Path.GetFullPath(path));
+
+                foreach (string directory in folders)
+                {
+                    result.AddRange(Execute(pattern, directory, simulate, complete));
+                }
+
+                if (string.IsNullOrEmpty(pattern.FolderFilter) || Regex.IsMatch(Path.GetDirectoryName(path), pattern.FolderFilter))
+                {
+                    foreach (string file in files)
                     {
-                        if(pattern.FindPatern.StartsWith("<B>"))
+                        sourceName = Path.GetFileName(file);
+                        if (string.IsNullOrEmpty(pattern.FileFilter) || Regex.IsMatch(sourceName, pattern.FileFilter))
                         {
-                            targetName = pattern.ReplacePatern.Replace("<B>", "")
-                                                              .Replace("<S>", index.ToString())
-                                                              .Replace("<s>", (index - 1).ToString())
-                                                              + sourceName;
-                        }else if(pattern.FindPatern.StartsWith("<E>"))
-                        {
-                            targetName = sourceName + pattern.ReplacePatern.Replace("<E>", "")
-                                                                           .Replace("<S>", index.ToString())
-                                                                           .Replace("<s>", (index - 1).ToString());
-                        }else if(pattern.FindPatern.StartsWith("<e>"))
-                        {
-                            targetName = Path.GetFileNameWithoutExtension(sourceName) 
-                                                    + pattern.ReplacePatern.Replace("<e>", "")
-                                                                            .Replace("<S>", index.ToString())
-                                                                            .Replace("<s>", (index - 1).ToString())
-                                                    + Path.GetExtension(sourceName);
-                                                                           
-                        }else
-                        {
-                            targetName = Regex.Replace(sourceName, pattern.FindPatern, pattern.ReplacePatern
-                                                                                            .Replace("<S>", index.ToString())
-                                                                                            .Replace("<s>", (index - 1).ToString()));
-                        }
+                            if (pattern.FindPatern.StartsWith("<B>"))
+                            {
+                                targetName = pattern.ReplacePatern.Replace("<B>", "")
+                                                                  .Replace("<S>", index.ToString())
+                                                                  .Replace("<s>", (index - 1).ToString())
+                                                                  + sourceName;
+                            }
+                            else if (pattern.FindPatern.StartsWith("<E>"))
+                            {
+                                targetName = sourceName + pattern.ReplacePatern.Replace("<E>", "")
+                                                                               .Replace("<S>", index.ToString())
+                                                                               .Replace("<s>", (index - 1).ToString());
+                            }
+                            else if (pattern.FindPatern.StartsWith("<e>"))
+                            {
+                                targetName = Path.GetFileNameWithoutExtension(sourceName)
+                                                        + pattern.ReplacePatern.Replace("<e>", "")
+                                                                                .Replace("<S>", index.ToString())
+                                                                                .Replace("<s>", (index - 1).ToString())
+                                                        + Path.GetExtension(sourceName);
 
-                        File.Move(file, Path.Combine(Path.GetDirectoryName(file), targetName));
-                        result.Add($"File: {sourceName} => {targetName}");
-                        index++;
+                            }
+                            else
+                            {
+                                targetName = Regex.Replace(sourceName, pattern.FindPatern, pattern.ReplacePatern
+                                                                                                .Replace("<S>", index.ToString())
+                                                                                                .Replace("<s>", (index - 1).ToString()));
+                            }
+                            if (!simulate)
+                            {
+                                File.Move(file, Path.Combine(Path.GetDirectoryName(file), targetName));
+                            }
+                            if (!complete)
+                                result.Add($"{reportPrefix}: {sourceName} => {targetName}");
+                            else
+                                result.Add($"{reportPrefix}: {file} => {Path.Combine(Path.GetDirectoryName(file), targetName)}");
+                            index++;
+                        }
                     }
                 }
             }
-
+            else
+            {
+                result.Add($"Path not found {path}");
+            }
             return result;
         }
 

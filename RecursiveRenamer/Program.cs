@@ -82,6 +82,16 @@ namespace RecursiveRenamer
                                     throw new InvalidOperationException("Must inform a path, on --path");
                                 }
                             }
+                            else if (arg.Equals("--simulate", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-sim", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                inputArgs.Add("SIMULATE", "");
+                            }
+                            else if (arg.Equals("--complete", StringComparison.InvariantCultureIgnoreCase)
+                                    || arg.Equals("-comp", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                inputArgs.Add("COMPLETE", "");
+                            }
                             else if (arg.Equals("--list", StringComparison.InvariantCultureIgnoreCase)
                                     || arg.Equals("-l", StringComparison.InvariantCultureIgnoreCase))
                             {
@@ -232,7 +242,8 @@ namespace RecursiveRenamer
 
                 if (string.IsNullOrEmpty(renamePatern.Name))
                 {
-                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("PATH"));
+                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("PATH"), 
+                                                    inputArgs.ContainsKey("SIMULATE"), inputArgs.ContainsKey("COMPLETE"));
                 }
                 else
                 {
@@ -305,7 +316,8 @@ namespace RecursiveRenamer
 
                 if (renamePatern != null)
                 {
-                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("PATH"));
+                    result = renameBusiness.Execute(renamePatern, inputArgs.GetValueOrDefault("PATH"),
+                                                    inputArgs.ContainsKey("SIMULATE"), inputArgs.ContainsKey("COMPLETE"));
                     foreach (string item in result)
                     {
                         Console.WriteLine(item);
@@ -348,6 +360,8 @@ namespace RecursiveRenamer
             Console.WriteLine("     --dir-filter <RegEx filter> (optional filter the directories to be searched)");
             Console.WriteLine("     --file-filter <RegEx filter> (optional filter the files to be renamed)");
             Console.WriteLine("     --save <pattern name> (optional saves pattern without running)");             
+            Console.WriteLine("     --simulate or -sim (Executes a simulation of the renaming process)");             
+            Console.WriteLine("     --complete or -comp (Shows the complete path on the rename report)");             
             Console.WriteLine("     <find pattern> special tags: ");
             Console.WriteLine("         <B> (Replace on the begining of the file name)");
             Console.WriteLine("         <E> (Replace on the end of the file name, consider the extension)");
