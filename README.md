@@ -4,7 +4,7 @@ Command line tool to recursively rename files based on regex pattern search and 
 Install:
 
 ```
-dotnet tool install RecursiveRenamer
+dotnet tool install --global RecursiveRenamer
 ```
   * Requires .Net core 2.2 : https://dotnet.microsoft.com/download/dotnet-core/2.2
   * It may be nescessary to add the 'dotnet tools' folder to the path environment variable in windows.
