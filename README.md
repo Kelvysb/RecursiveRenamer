@@ -20,6 +20,8 @@ Execute:
      --dir-filter <RegEx filter> (optional filter the directories to be searched)
      --file-filter <RegEx filter> (optional filter the files to be renamed)
      --save <pattern name> (optional saves pattern without running)
+     --simulate or -sim (Executes a simulation of the renaming process)
+     --complete or -comp (Shows the complete path on the rename report)
      <find pattern> special tags:
          <B> (Replace on the begining of the file name)
          <E> (Replace on the end of the file name, consider the extension)
